@@ -1,0 +1,16 @@
+{
+  "name": "proxy-storage",
+  "version": "1.0.0",
+  "description": "Proxy localstorage and sessionstorage to add serializers and deserializers",
+  "main": "index.js",
+  "author": "Stan Bondi <stan@fixate.it>",
+  "license": "MIT",
+  "scripts": {
+    "test": "node ./test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "sinon": "^1.17.7",
+    "tape": "^4.6.3"
+  }
+}
