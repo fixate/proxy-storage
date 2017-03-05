@@ -41,7 +41,10 @@ Play with `example.js` to learn more.
 
 ## Requirements
 
-This library has no dependencies -
-however ES6 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
-is used, and if you are using this in the browser you should include the
+This library has no dependencies, however:
+
+- ES6 [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+is used. If you are using this in the browser you should include the
 [Proxy polyfill](https://github.com/GoogleChrome/proxy-polyfill).
+
+- `Array.reduce` is used. Modern browsers support this.
