@@ -10,6 +10,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "lz-string": "^1.4.4",
     "sinon": "^1.17.7",
     "tape": "^4.6.3"
   }
