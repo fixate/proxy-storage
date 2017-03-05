@@ -1,9 +1,9 @@
 function identity(a) { return a; }
 
-var defaultOptions = {
+const defaultOptions = {
   storage: global.localStorage,
   serializer: identity,
-  deserialize: identity,
+  deserializer: identity,
   deserializeNull: false,
 };
 
@@ -11,24 +11,45 @@ function isNullOrUndefined(value) {
   return value === null || value === undefined;
 }
 
-module.exports = function proxyStorage(opts) {
-  var options = Object.assign({}, defaultOptions, opts);
-  var storage = options.storage;
-  var serializer = options.serializer;
-  var deserializer = options.deserializer;
+function chain(fns) {
+  if (typeof fns === 'function') {
+    return fns;
+  }
 
-  return Object.assign({}, storage, {
-    getItem: function getItem(name) {
-      var item = storage.getItem(name);
+  return v => fns.reduce((acc, fn) => fn(acc), v);
+}
+
+module.exports = function proxyStorage(opts) {
+  const options = Object.assign({}, defaultOptions, opts);
+  const { storage, serializer, deserializer, deserializeNull} = options;
+  const deserializerFn = chain(deserializer);
+  const serializerFn = chain(serializer);
+
+    function getItem(name) {
+      const item = storage.getItem(name);
       if (options.deserializeNull || !isNullOrUndefined(item)) {
-        return deserializer(item);
+        return deserializerFn(item);
       }
 
       return undefined;
-    },
+    }
 
-    setItem: function setItem(name, value) {
-      return storage.setItem(name, serializer(value));
+    function setItem(name, value) {
+      return storage.setItem(name, serializerFn(value));
+    }
+
+  return new Proxy(storage, {
+    get(target, name) {
+      if (name === 'getItem') {
+        return getItem;
+      }
+
+      if (name === 'setItem') {
+        return setItem;
+      }
+
+      const prop = storage[name];
+      return prop.bind ? prop.bind(storage) : prop;
     },
   });
 
