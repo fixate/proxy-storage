@@ -21,22 +21,22 @@ function chain(fns) {
 
 module.exports = function proxyStorage(opts) {
   const options = Object.assign({}, defaultOptions, opts);
-  const { storage, serializer, deserializer, deserializeNull} = options;
+  const { storage, serializer, deserializer, deserializeNull } = options;
   const deserializerFn = chain(deserializer);
   const serializerFn = chain(serializer);
 
-    function getItem(name) {
-      const item = storage.getItem(name);
-      if (options.deserializeNull || !isNullOrUndefined(item)) {
-        return deserializerFn(item);
-      }
-
-      return undefined;
+  function getItem(name) {
+    const item = storage.getItem(name);
+    if (options.deserializeNull || !isNullOrUndefined(item)) {
+      return deserializerFn(item);
     }
 
-    function setItem(name, value) {
-      return storage.setItem(name, serializerFn(value));
-    }
+    return undefined;
+  }
+
+  function setItem(name, value) {
+    return storage.setItem(name, serializerFn(value));
+  }
 
   return new Proxy(storage, {
     get(target, name) {
