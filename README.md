@@ -1,18 +1,22 @@
-# proxy-storage
+# web-storage-proxy
 
 Proxies `getItem` and `setItem` storage apis (e.g. localStorage, sessionStorage) and add in your
 own serializers and deserializers.
+
+## Installation
+
+`npm install --save web-storage-proxy`
 
 ## Usage
 
 The following code will serialize JavaScript objects and store them compressed in localStorage.
 
 ```javascript
-const proxy = require('./');
+const createStorageProxy = require('web-storage-proxy');
 const lzString = require('lz-string');
 const { localStorage } = global;
 
-const proxied = proxy({
+const compressedStorage = createStorageProxy({
   storage: localStorage,
   serializer: [
     JSON.stringify,
@@ -29,10 +33,10 @@ const input = {
   this: 'is', just: 'an', exmaple: { of: { a: { deeply: { nested: 'object' } } } }
 };
 console.log(`Input ${JSON.stringify(input)}`)
-proxied.setItem('foo', input);
+compressedStorage.setItem('foo', input);
 console.log(`Compressed value: ${memStorage.store.foo}`)
 
-const result = proxied.getItem('foo');
+const result = compressedStorage.getItem('foo');
 console.log(`Deserialized ${JSON.stringify(result)}`)
 ```
 
